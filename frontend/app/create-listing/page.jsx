@@ -146,7 +146,7 @@ export default function CreateListingPage() {
                   style={{ padding: '12px 14px', fontSize: '0.95rem' }}
                 />
                 <small style={{ color: '#aaa', fontSize: '0.8rem' }}>
-                  HTML formatting is supported
+                  Describe your item clearly for buyers
                 </small>
               </div>
 
@@ -154,9 +154,9 @@ export default function CreateListingPage() {
                 <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                   <ImagePlus size={14} /> Photo
                 </label>
-                {/* VULNERABILITY: File Upload - accepts all file types, no validation */}
                 <input
                   type="file"
+                  accept="image/jpeg,image/png,image/gif,image/webp"
                   onChange={e => setFile(e.target.files[0])}
                   style={{ fontSize: '0.88rem' }}
                 />

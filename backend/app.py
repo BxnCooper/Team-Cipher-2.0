@@ -6,6 +6,7 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import sys
 import os
+import uuid
 from werkzeug.utils import secure_filename
 from PIL import Image
 
@@ -36,6 +37,10 @@ CORS(app)
 # Upload folder for listing images
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# File upload security settings
+ALLOWED_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.webp'}
+MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
 
 # Initialize database and seed if empty
 try:
@@ -206,27 +211,28 @@ def create_listing():
             image_url = None
             if 'image' in request.files:
                 file = request.files['image']
-                if file and file.filename:
-                    #sanitize filename
-                    filename = secure_filename(file.filename)
-                    
-                    #check filetype
-                    ext =  filename.rsplit('.',1)[-1].lower()
-                    if ext not in ['jpg', 'jpeg', 'png', 'gif']:
-                        return jsonify({'error': 'Invalid file type'}), 400
-                    
-                    #check file content
+                if file.filename:
+                    ext = os.path.splitext(secure_filename(file.filename))[1].lower()
+                    if ext not in ALLOWED_EXTENSIONS:
+                        return jsonify({'error': 'Invalid file type. Allowed: jpg, jpeg, png, gif, webp'}), 400
+
+                    file.seek(0, os.SEEK_END)
+                    size = file.tell()
+                    file.seek(0)
+                    if size > MAX_FILE_SIZE:
+                        return jsonify({'error': 'File too large. Maximum size is 5MB'}), 400
+
                     try:
                         img = Image.open(file)
-                        img.verify()  # Verify that it's an image
-                    except Exception as e:
+                        img.verify()
+                    except Exception:
                         return jsonify({'error': 'Invalid image file'}), 400
-                    
                     file.seek(0)
 
-                    filepath = os.path.join(UPLOAD_FOLDER, file.filename)
+                    safe_name = f"{uuid.uuid4().hex}{ext}"
+                    filepath = os.path.join(UPLOAD_FOLDER, safe_name)
                     file.save(filepath)
-                    image_url = f'/uploads/{file.filename}'
+                    image_url = f'/uploads/{safe_name}'
         else:
             data = request.get_json()
             title = data.get('title')
