@@ -124,8 +124,6 @@ export default function LoginPage() {
         </div>
       </div>
 
-       {/* Debug block removed: do not ship default credentials or client-accessible secrets in source */}
-
       <footer className="site-footer">
         <p><span>EagleMart</span> · Student Marketplace</p>
       </footer>
