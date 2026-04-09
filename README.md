@@ -36,7 +36,7 @@ This single command will:
 1. Create a Python virtual environment (if not exists)
 2. Install backend dependencies
 3. Initialize the database and seed it with sample data
-4. Start the Flask backend on port 5000
+4. Start the Flask backend on port 5001
 5. Install frontend dependencies (if not exists)
 6. Start the Next.js frontend on port 3000
 
@@ -55,7 +55,7 @@ source venv/bin/activate             # activate it (macOS/Linux)
 pip install -r requirements.txt      # install dependencies (first time only)
 python app.py                        # start the server
 ```
-The backend will run on **http://localhost:5000**
+The backend will run on **http://localhost:5001**
 
 **Terminal 2 — Start the Frontend:**
 ```bash
@@ -245,9 +245,9 @@ pip install -r requirements.txt
 python app.py
 ```
 
-**Port 5000 already in use (macOS)**
-- macOS uses port 5000 for AirPlay Receiver. Disable it in System Settings > General > AirDrop & Handoff > AirPlay Receiver
-- Or kill the process: `lsof -i :5000` then `kill -9 <PID>`
+**Port 5001 already in use (macOS)**
+- macOS uses port 5001 for AirPlay Receiver. Disable it in System Settings > General > AirDrop & Handoff > AirPlay Receiver
+- Or kill the process: `lsof -i :5001` then `kill -9 <PID>`
 
 **Database errors**
 - Delete `database/team_cipher.db` and restart the backend — it will auto-recreate and seed

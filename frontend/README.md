@@ -5,7 +5,7 @@ npm install
 npm run dev
 ```
 
-Runs on [http://localhost:3000](http://localhost:3000). Requires backend on port 5000.
+Runs on [http://localhost:3000](http://localhost:3000). Requires backend on port 5001.
 
 ## Pages
 

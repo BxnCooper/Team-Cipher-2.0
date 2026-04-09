@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 
-const API = 'http://localhost:5000';
+const API = 'http://localhost:5001';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
@@ -125,7 +125,7 @@ export default function LoginPage() {
       </div>
 
       {/* VULNERABILITY: Sensitive Data Exposure - debug info in HTML comment */}
-      <div dangerouslySetInnerHTML={{ __html: '<!-- Debug: API endpoint = http://localhost:5000/api/login, Default credentials: admin/admin123 -->' }} />
+  <div dangerouslySetInnerHTML={{ __html: '<!-- Debug: API endpoint = http://localhost:5001/api/login, Default credentials: admin/admin123 -->' }} />
 
       <footer className="site-footer">
         <p><span>EagleMart</span> · Student Marketplace</p>
