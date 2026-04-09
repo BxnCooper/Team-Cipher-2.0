@@ -32,7 +32,7 @@ from database import (
 )
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=['http://localhost:3000', 'http://localhost:3001'])
 
 # Upload folder for listing images
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
