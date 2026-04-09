@@ -7,6 +7,7 @@ from flask_cors import CORS
 import sys
 import os
 import uuid
+import logging
 from werkzeug.utils import secure_filename
 from PIL import Image
 
@@ -76,12 +77,13 @@ def login():
             })
         return jsonify({'error': 'Invalid username or password'}), 401
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f'Login error: {e}')
+        return jsonify({'error': 'An internal error occurred'}), 500
 
 
 @app.route('/api/register', methods=['POST'])
 def register():
-    """VULNERABILITY: No CSRF, stores plain text password"""
+    """SECURE: Passwords hashed with bcrypt, not exposed in response"""
     try:
         data = request.get_json()
         username = data.get('username')
@@ -101,7 +103,8 @@ def register():
             }), 201
         return jsonify({'error': 'Username or email already taken'}), 400
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f'Register error: {e}')
+        return jsonify({'error': 'An internal error occurred'}), 500
 
 
 # ============================================================================
@@ -162,7 +165,8 @@ def get_profile(user_id):
             'listings': listings
         })
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f'Profile error: {e}')
+        return jsonify({'error': 'An internal error occurred'}), 500
 
 
 # ============================================================================
@@ -177,7 +181,8 @@ def list_listings():
         listings = get_listings(category=category, limit=limit)
         return jsonify({'listings': listings})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f'List listings error: {e}')
+        return jsonify({'error': 'An internal error occurred'}), 500
 
 
 @app.route('/api/listings/<int:listing_id>', methods=['GET'])
@@ -188,7 +193,8 @@ def get_single_listing(listing_id):
             return jsonify({'listing': listing})
         return jsonify({'error': 'Listing not found'}), 404
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f'Get listing error: {e}')
+        return jsonify({'error': 'An internal error occurred'}), 500
 
 
 @app.route('/api/listings', methods=['POST'])
@@ -250,7 +256,8 @@ def create_listing():
             return jsonify({'id': listing_id, 'message': 'Listing created'}), 201
         return jsonify({'error': 'Failed to create listing'}), 400
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f'Create listing error: {e}')
+        return jsonify({'error': 'An internal error occurred'}), 500
 
 
 @app.route('/uploads/<filename>')
@@ -265,7 +272,7 @@ def serve_upload(filename):
 
 @app.route('/api/search', methods=['GET'])
 def search():
-    """VULNERABILITY: SQL Injection - query passed directly to raw SQL"""
+    """SECURE: Uses parameterized queries, generic error messages"""
     query = request.args.get('q', '')
     if not query:
         return jsonify({'listings': []})
@@ -273,8 +280,8 @@ def search():
         results = search_listings(query)
         return jsonify({'listings': results})
     except Exception as e:
-        # VULNERABILITY: Information Disclosure - raw SQL error returned to user
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f'Search error: {e}')
+        return jsonify({'error': 'Search failed. Please try again.'}), 500
 
 
 # ============================================================================
@@ -307,7 +314,8 @@ def send_message():
             return jsonify({'id': msg_id, 'message': 'Message sent'}), 201
         return jsonify({'error': 'Failed to send message'}), 400
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f'Send message error: {e}')
+        return jsonify({'error': 'An internal error occurred'}), 500
 
 
 # ============================================================================
@@ -326,7 +334,8 @@ def test():
             'listings_count': len(listings),
         })
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f'Test endpoint error: {e}')
+        return jsonify({'error': 'An internal error occurred'}), 500
 
 
 @app.route('/')
@@ -352,4 +361,4 @@ if __name__ == '__main__':
     print("=" * 50)
     print("EagleMart Backend - http://localhost:5001")
     print("=" * 50)
-    app.run(debug=True, port=5001)
+    app.run(debug=False, port=5001)
