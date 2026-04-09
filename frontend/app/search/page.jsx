@@ -137,10 +137,9 @@ export default function SearchPage() {
             alignItems: 'center',
             marginBottom: 20,
           }}>
-            <p
-              style={{ color: '#888', fontSize: '0.88rem' }}
-              dangerouslySetInnerHTML={{ __html: `Showing results for: <strong style="color:#1a1a1a">${query}</strong>` }}
-            />
+            <p style={{ color: '#888', fontSize: '0.88rem' }}>
+              Showing results for: <strong style={{color:'#1a1a1a'}}>{query}</strong>
+            </p>
             {results.length > 0 && (
               <span style={{ color: '#999', fontSize: '0.84rem' }}>{results.length} result{results.length !== 1 ? 's' : ''}</span>
             )}
@@ -159,10 +158,7 @@ export default function SearchPage() {
                   ) : '📷'}
                 </div>
                 <div className="listing-card-body">
-                  <h3
-                    className="listing-card-title"
-                    dangerouslySetInnerHTML={{ __html: item.title }}
-                  />
+                  <h3 className="listing-card-title">{item.title}</h3>
                   {item.description && (
                     <p className="listing-card-desc">{item.description}</p>
                   )}

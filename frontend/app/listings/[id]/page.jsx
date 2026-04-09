@@ -110,19 +110,13 @@ export default function ListingDetailPage() {
               {listing.category}
             </span>
 
-            {/* VULNERABILITY: XSS - title rendered as raw HTML */}
-            <h1
-              style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1a1a1a', marginBottom: 4 }}
-              dangerouslySetInnerHTML={{ __html: listing.title }}
-            />
+            <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1a1a1a', marginBottom: 4 }}>
+              {listing.title}
+            </h1>
 
             <p className="detail-price">${listing.price}</p>
 
-            {/* VULNERABILITY: XSS - description rendered as raw HTML */}
-            <div
-              className="detail-description"
-              dangerouslySetInnerHTML={{ __html: listing.description }}
-            />
+            <div className="detail-description">{listing.description}</div>
 
             <div className="detail-meta">
               <p style={{ display: 'flex', alignItems: 'center', gap: 6 }}>

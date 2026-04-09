@@ -82,11 +82,7 @@ export default function ListingsPage() {
                   ) : '📷'}
                 </div>
                 <div className="listing-card-body">
-                  {/* VULNERABILITY: XSS - title rendered as HTML */}
-                  <h3
-                    className="listing-card-title"
-                    dangerouslySetInnerHTML={{ __html: item.title }}
-                  />
+                  <h3 className="listing-card-title">{item.title}</h3>
                   {item.description && (
                     <p className="listing-card-desc">{item.description}</p>
                   )}
