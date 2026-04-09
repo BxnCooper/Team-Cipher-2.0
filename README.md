@@ -2,7 +2,7 @@
 
 **CSC 489 - Web Application Security | Spring 2026 | Team Cipher**
 
-EagleMart is a full-stack campus marketplace web application where students can buy and sell items such as textbooks, electronics, furniture, and more. Built with intentional security vulnerabilities as part of the CSC 489 Capstone Project for educational penetration testing.
+EagleMart is a full-stack campus marketplace web application where students can buy and sell items such as textbooks, electronics, furniture, and more. Built as part of the CSC 489 Capstone Project. Security hardened during Milestone 3 defense phase following penetration testing by Team Vortex.
 
 ---
 
@@ -71,17 +71,9 @@ Go to [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## Default Credentials
+## Test Accounts
 
-The database is automatically seeded with these test accounts on first start:
-
-| Username | Password    | Role  |
-|----------|-------------|-------|
-| admin    | admin123    | admin |
-| jsmith   | password123 | user  |
-| emilyr   | password123 | user  |
-| carlos99 | password123 | user  |
-| priya_k  | password123 | user  |
+The database is automatically seeded with test accounts on first start. See `database/seed.py` for usernames. All passwords are hashed with bcrypt.
 
 12 sample listings are also created across categories: textbooks, electronics, furniture, clothing, and sports.
 
@@ -104,7 +96,7 @@ The database is automatically seeded with these test accounts on first start:
 | Layer     | Technology                         |
 |-----------|------------------------------------|
 | Frontend  | Next.js 14, React 18, Lucide Icons |
-| Backend   | Flask 3.0, Python                  |
+| Backend   | Flask 3.0, Python, bcrypt          |
 | Database  | SQLite 3                           |
 
 ---
@@ -251,6 +243,21 @@ python app.py
 
 **Database errors**
 - Delete `database/team_cipher.db` and restart the backend — it will auto-recreate and seed
+
+---
+
+## Security
+
+The following security controls are implemented:
+
+- **SQL Injection Prevention** — All database queries use parameterized placeholders (`?`)
+- **XSS Prevention** — React safe text rendering (no `dangerouslySetInnerHTML`)
+- **Password Hashing** — bcrypt with salting for all stored passwords
+- **Authorization Checks** — Profile and listing endpoints verify user identity
+- **File Upload Validation** — Extension whitelist (images only), 5MB size limit, UUID filenames
+- **CORS Restriction** — Only frontend origins allowed (`localhost:3000`, `localhost:3001`)
+- **Generic Error Messages** — No internal details leaked to clients
+- **Debug Mode Disabled** — Flask runs with `debug=False`
 
 ---
 
