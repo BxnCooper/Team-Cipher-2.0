@@ -7,6 +7,7 @@ Also called automatically by backend on first start
 import os
 import sys
 import sqlite3
+import bcrypt
 
 DB_PATH = os.path.join(os.path.dirname(__file__), 'team_cipher.db')
 
@@ -23,13 +24,16 @@ def seed():
         conn.close()
         return
 
-    # ── Users ──
+    # ── Users (passwords hashed with bcrypt) ──
+    def hash_pw(pw):
+        return bcrypt.hashpw(pw.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
     users = [
-        ('admin', 'admin@university.edu', 'admin123', 'admin'),
-        ('jsmith', 'john.smith@university.edu', 'password123', 'user'),
-        ('emilyr', 'emily.r@university.edu', 'password123', 'user'),
-        ('carlos99', 'carlos.m@university.edu', 'password123', 'user'),
-        ('priya_k', 'priya.k@university.edu', 'password123', 'user'),
+        ('admin', 'admin@university.edu', hash_pw('admin123'), 'admin'),
+        ('jsmith', 'john.smith@university.edu', hash_pw('password123'), 'user'),
+        ('emilyr', 'emily.r@university.edu', hash_pw('password123'), 'user'),
+        ('carlos99', 'carlos.m@university.edu', hash_pw('password123'), 'user'),
+        ('priya_k', 'priya.k@university.edu', hash_pw('password123'), 'user'),
     ]
 
     c.executemany(
@@ -97,7 +101,7 @@ def seed():
 
     conn.commit()
     conn.close()
-    print("Seed complete! Default login: admin / admin123")
+    print("Seed complete! Passwords are hashed with bcrypt.")
 
 
 if __name__ == '__main__':

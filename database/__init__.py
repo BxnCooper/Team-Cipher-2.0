@@ -15,6 +15,7 @@ from .db import (
     update_listing,
     delete_listing,
     add_message,
+    verify_password,
 )
 
 __all__ = [
@@ -34,4 +35,5 @@ __all__ = [
     "update_listing",
     "delete_listing",
     "add_message",
+    "verify_password",
 ]

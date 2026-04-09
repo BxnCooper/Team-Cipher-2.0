@@ -1,5 +1,6 @@
 import sqlite3
 import os
+import bcrypt
 
 DB_PATH = os.path.join(os.path.dirname(__file__), 'team_cipher.db')
 
@@ -26,13 +27,19 @@ def initialize_db():
 # USERS
 # =====================
 
+def verify_password(plain_password, hashed_password):
+    """Verify a plaintext password against a bcrypt hash"""
+    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
+
+
 def add_user(username, email, password, role='user'):
     try:
         conn = get_connection()
         cursor = conn.cursor()
+        hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
         cursor.execute(
             "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)",
-            (username, email, password, role)
+            (username, email, hashed, role)
         )
         conn.commit()
         user_id = cursor.lastrowid

@@ -27,6 +27,7 @@ from database import (
     update_listing,
     delete_listing,
     add_message,
+    verify_password,
 )
 
 app = Flask(__name__)
@@ -55,22 +56,20 @@ except Exception as e:
 
 @app.route('/api/login', methods=['POST'])
 def login():
-    """VULNERABILITY: SQL Injection possible via backend, no CSRF, plain text password compare"""
+    """SECURE: Uses bcrypt password verification, generic error messages, no password in response"""
     try:
         data = request.get_json()
         username = data.get('username', '')
         password = data.get('password', '')
 
         user = get_user_by_username(username)
-        if user and user['password'] == password:
+        if user and verify_password(password, user['password']):
+            user_data = {k: v for k, v in user.items() if k != 'password'}
             return jsonify({
-                'user': user,
+                'user': user_data,
                 'token': f'mock-token-{user["id"]}'
             })
-        # VULNERABILITY: Information Disclosure - reveals whether username exists
-        if user:
-            return jsonify({'error': 'Invalid password'}), 401
-        return jsonify({'error': 'User not found'}), 401
+        return jsonify({'error': 'Invalid username or password'}), 401
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -90,8 +89,9 @@ def register():
         user_id = add_user(username, email, password)
         if user_id:
             user = get_user_by_id(user_id)
+            user_data = {k: v for k, v in user.items() if k != 'password'}
             return jsonify({
-                'user': user,
+                'user': user_data,
                 'token': f'mock-token-{user_id}'
             }), 201
         return jsonify({'error': 'Username or email already taken'}), 400
