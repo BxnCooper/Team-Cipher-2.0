@@ -185,11 +185,7 @@ def get_user_listings(user_id):
 
 
 def search_listings(query):
-    """SAFE: Use parameterized queries to prevent SQL injection.
-
-    Performs a LIKE search on title, description and category using
-    bound parameters. Always closes the DB connection.
-    """
+    """SAFE: Use parameterized queries to prevent SQL injection."""
     conn = get_connection()
     cursor = conn.cursor()
     try:
