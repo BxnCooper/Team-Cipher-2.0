@@ -82,7 +82,7 @@ cd ..
 echo ""
 echo "==============================="
 echo "  EagleMart is running!"
-echo "  Backend:  http://localhost:5000"
+echo "  Backend:  http://localhost:5001"
 echo "  Frontend: http://localhost:3000"
 echo "  Login:    admin / admin123"
 echo "==============================="

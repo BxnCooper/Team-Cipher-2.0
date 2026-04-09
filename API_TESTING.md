@@ -2,7 +2,7 @@
 
 ## ✅ Server is Running
 
-**Backend:** http://localhost:5000  
+**Backend:** http://localhost:5001  
 **Database:** SQLite (team_cipher.db in database folder)
 
 ---
@@ -13,12 +13,12 @@
 
 #### 1. Test if everything is working
 ```powershell
-Invoke-WebRequest -Uri "http://localhost:5000/api/test" -Method GET | ConvertTo-Json
+Invoke-WebRequest -Uri "http://localhost:5001/api/test" -Method GET | ConvertTo-Json
 ```
 
 #### 2. Get all users
 ```powershell
-Invoke-WebRequest -Uri "http://localhost:5000/api/users" -Method GET | ConvertTo-Json
+Invoke-WebRequest -Uri "http://localhost:5001/api/users" -Method GET | ConvertTo-Json
 ```
 
 #### 3. Create a new user
@@ -29,7 +29,7 @@ $body = @{
     password = "password123"
 } | ConvertTo-Json
 
-Invoke-WebRequest -Uri "http://localhost:5000/api/users" `
+Invoke-WebRequest -Uri "http://localhost:5001/api/users" `
   -Method POST `
   -ContentType "application/json" `
   -Body $body | ConvertTo-Json
@@ -45,7 +45,7 @@ $body = @{
     category = "electronics"
 } | ConvertTo-Json
 
-Invoke-WebRequest -Uri "http://localhost:5000/api/listings" `
+Invoke-WebRequest -Uri "http://localhost:5001/api/listings" `
   -Method POST `
   -ContentType "application/json" `
   -Body $body | ConvertTo-Json
@@ -53,7 +53,7 @@ Invoke-WebRequest -Uri "http://localhost:5000/api/listings" `
 
 #### 5. Get all listings
 ```powershell
-Invoke-WebRequest -Uri "http://localhost:5000/api/listings" -Method GET | ConvertTo-Json
+Invoke-WebRequest -Uri "http://localhost:5001/api/listings" -Method GET | ConvertTo-Json
 ```
 
 ---
@@ -92,7 +92,7 @@ $newUser = @{
     password = "securepass123"
 } | ConvertTo-Json
 
-$response = Invoke-WebRequest -Uri "http://localhost:5000/api/users" `
+$response = Invoke-WebRequest -Uri "http://localhost:5001/api/users" `
   -Method POST `
   -ContentType "application/json" `
   -Body $newUser
@@ -102,7 +102,7 @@ $response.Content | ConvertFrom-Json
 
 ### Get All Users
 ```powershell
-(Invoke-WebRequest -Uri "http://localhost:5000/api/users" -Method GET).Content | ConvertFrom-Json
+(Invoke-WebRequest -Uri "http://localhost:5001/api/users" -Method GET).Content | ConvertFrom-Json
 ```
 
 ### Create a Listing
@@ -115,7 +115,7 @@ $listing = @{
     category = "electronics"
 } | ConvertTo-Json
 
-$response = Invoke-WebRequest -Uri "http://localhost:5000/api/listings" `
+$response = Invoke-WebRequest -Uri "http://localhost:5001/api/listings" `
   -Method POST `
   -ContentType "application/json" `
   -Body $listing
@@ -131,7 +131,7 @@ From your Next.js frontend, use these fetch calls:
 
 ### Get all listings
 ```javascript
-const response = await fetch('http://localhost:5000/api/listings');
+const response = await fetch('http://localhost:5001/api/listings');
 const listings = await response.json();
 console.log(listings);
 ```
@@ -146,7 +146,7 @@ const newListing = {
   category: "electronics"
 };
 
-const response = await fetch('http://localhost:5000/api/listings', {
+const response = await fetch('http://localhost:5001/api/listings', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify(newListing)
@@ -158,7 +158,7 @@ console.log(result);
 
 ### Get all users
 ```javascript
-const response = await fetch('http://localhost:5000/api/users');
+const response = await fetch('http://localhost:5001/api/users');
 const users = await response.json();
 console.log(users);
 ```
@@ -191,10 +191,10 @@ Tables:
 
 ### CORS errors from frontend
 - CORS is enabled in Flask with `CORS(app)`
-- Make sure frontend requests go to `http://localhost:5000`
+- Make sure frontend requests go to `http://localhost:5001`
 
-### Port 5000 already in use
-- Kill any existing processes on port 5000
+-### Port 5001 already in use
+- Kill any existing processes on port 5001
 - Or modify the port in `app.py`: `app.run(debug=True, port=5001)`
 
 ---

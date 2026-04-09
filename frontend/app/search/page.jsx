@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 import { Search, ShoppingCart } from 'lucide-react';
 
-const API = 'http://localhost:5000';
+const API = 'http://localhost:5001';
 
 function imgSrc(url) {
   if (!url) return null;

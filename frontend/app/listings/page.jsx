@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 
-const API = 'http://localhost:5000';
+const API = 'http://localhost:5001';
 
 const categories = [
   { name: 'All', slug: '' },

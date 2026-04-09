@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar';
 import Link from 'next/link';
 import { useState } from 'react';
 
-const API = 'http://localhost:5000';
+const API = 'http://localhost:5001';
 
 export default function RegisterPage() {
   const [form, setForm] = useState({ username: '', email: '', password: '', confirmPassword: '' });

@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 
 import { BookOpen, Monitor, Armchair, Shirt, Dumbbell, Package } from 'lucide-react';
 
-const API = 'http://localhost:5000';
+const API = 'http://localhost:5001';
 
 const categories = [
   { name: 'Textbooks', slug: 'textbooks', icon: BookOpen },

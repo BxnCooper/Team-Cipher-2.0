@@ -326,6 +326,6 @@ def home():
 
 if __name__ == '__main__':
     print("=" * 50)
-    print("EagleMart Backend - http://localhost:5000")
+    print("EagleMart Backend - http://localhost:5001")
     print("=" * 50)
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5001)
