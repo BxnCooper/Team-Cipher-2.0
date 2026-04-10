@@ -124,8 +124,7 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* VULNERABILITY: Sensitive Data Exposure - debug info in HTML comment */}
-  <div dangerouslySetInnerHTML={{ __html: '<!-- Debug: API endpoint = http://localhost:5001/api/login, Default credentials: admin/admin123 -->' }} />
+       {/* Debug block removed: do not ship default credentials or client-accessible secrets in source */}
 
       <footer className="site-footer">
         <p><span>EagleMart</span> · Student Marketplace</p>
