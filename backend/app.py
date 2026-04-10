@@ -6,6 +6,8 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import sys
 import os
+from werkzeug.utils import secure_filename
+from PIL import Image
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -200,12 +202,28 @@ def create_listing():
             # SECURITY: Verify that seller_id matches authenticated user
             if int(seller_id) != request.current_user['id']:
                 return jsonify({'error': 'Unauthorized'}), 403
-
+                #secure file validation
             image_url = None
             if 'image' in request.files:
                 file = request.files['image']
-                if file.filename:
-                    # VULNERABILITY: File Upload - no validation of file type or content
+                if file and file.filename:
+                    #sanitize filename
+                    filename = secure_filename(file.filename)
+                    
+                    #check filetype
+                    ext =  filename.rsplit('.',1)[-1].lower()
+                    if ext not in ['jpg', 'jpeg', 'png', 'gif']:
+                        return jsonify({'error': 'Invalid file type'}), 400
+                    
+                    #check file content
+                    try:
+                        img = Image.open(file)
+                        img.verify()  # Verify that it's an image
+                    except Exception as e:
+                        return jsonify({'error': 'Invalid image file'}), 400
+                    
+                    file.seek(0)
+
                     filepath = os.path.join(UPLOAD_FOLDER, file.filename)
                     file.save(filepath)
                     image_url = f'/uploads/{file.filename}'
