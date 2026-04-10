@@ -185,18 +185,26 @@ def get_user_listings(user_id):
 
 
 def search_listings(query):
-    """VULNERABILITY: SQL Injection - uses string concatenation"""
+    """SAFE: Use parameterized queries to prevent SQL injection.
+
+    Performs a LIKE search on title, description and category using
+    bound parameters. Always closes the DB connection.
+    """
     conn = get_connection()
     cursor = conn.cursor()
-    sql = "SELECT listings.*, users.username as seller_name FROM listings JOIN users ON listings.user_id = users.id WHERE listings.title LIKE '%" + query + "%' OR listings.description LIKE '%" + query + "%' OR listings.category LIKE '%" + query + "%'"
     try:
-        cursor.execute(sql)
+        pattern = f"%{query}%"
+        sql = (
+            "SELECT listings.*, users.username as seller_name "
+            "FROM listings "
+            "JOIN users ON listings.user_id = users.id "
+            "WHERE listings.title LIKE ? OR listings.description LIKE ? OR listings.category LIKE ?"
+        )
+        cursor.execute(sql, (pattern, pattern, pattern))
         listings = cursor.fetchall()
-        conn.close()
         return [dict(l) for l in listings]
-    except Exception as e:
+    finally:
         conn.close()
-        raise e
 
 
 def update_listing(listing_id, title=None, description=None, price=None, category=None, image_url=None):
