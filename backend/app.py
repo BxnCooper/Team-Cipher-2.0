@@ -67,10 +67,9 @@ def login():
                 'user': user,
                 'token': f'mock-token-{user["id"]}'
             })
-        # VULNERABILITY: Information Disclosure - reveals whether username exists
-        if user:
-            return jsonify({'error': 'Invalid password'}), 401
-        return jsonify({'error': 'User not found'}), 401
+        # VULNERABILITY fixed
+        return jsonify({'error': 'Invalid username or password'}), 401
+            
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
