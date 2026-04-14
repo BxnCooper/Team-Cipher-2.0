@@ -8,24 +8,14 @@ EagleMart is a full-stack campus marketplace web application where students can 
 
 ## Prerequisites
 
-Make sure you have these installed before starting:
-
 - **Node.js** v18 or higher — [download here](https://nodejs.org/)
 - **Python** 3.8 or higher — [download here](https://www.python.org/downloads/)
-
-Verify installation:
-```bash
-node --version    # should show v18+
-python3 --version # should show 3.8+
-```
 
 ---
 
 ## Getting Started
 
 ### Option 1: Start Everything (Recommended)
-
-From the project root directory:
 
 ```bash
 chmod +x start.sh   # only needed once
@@ -44,26 +34,23 @@ Press `Ctrl+C` to stop both servers.
 
 ### Option 2: Start Manually
 
-You need **two separate terminal windows**.
-
-**Terminal 1 — Start the Backend:**
+**Terminal 1 — Backend:**
 ```bash
 cd backend
-python3 -m venv venv                # create virtual environment (first time only)
-source venv/bin/activate             # activate it (macOS/Linux)
-# OR: venv\Scripts\activate          # activate it (Windows)
-pip install -r requirements.txt      # install dependencies (first time only)
-python app.py                        # start the server
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python app.py
 ```
 The backend will run on **http://localhost:5001**
 
-**Terminal 2 — Start the Frontend:**
+**Terminal 2 — Frontend:**
 ```bash
 cd frontend
-npm install          # install dependencies (first time only)
-npm run dev          # start the dev server
+npm install
+npm run dev
 ```
-The frontend will run on **http://localhost:3000**
+Frontend runs on **http://localhost:3000**
 
 ### Open the App
 
@@ -73,7 +60,7 @@ Go to [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Test Accounts
 
-The database is automatically seeded with test accounts on first start. See `database/seed.py` for usernames. All passwords are hashed with bcrypt.
+The database is automatically seeded with test accounts on first start. All passwords are hashed with bcrypt. See `database/seed.py` for usernames and credentials.
 
 12 sample listings are also created across categories: textbooks, electronics, furniture, clothing, and sports.
 
@@ -81,12 +68,12 @@ The database is automatically seeded with test accounts on first start. See `dat
 
 ## Features
 
-- **User Authentication** — Login and registration with session management
-- **User Profiles** — View user details and their active listings
+- **User Authentication** — Login and registration with bcrypt password hashing
+- **User Profiles** — Authenticated access to user details and active listings
 - **Marketplace Listings** — Browse, filter by category, view details
-- **Create Listings** — Post items for sale with photo upload
-- **Search** — Search across all listing titles and descriptions
-- **Contact Seller** — Send messages to listing owners
+- **Create Listings** — Post items for sale with validated image upload
+- **Search** — Search across all listing titles, descriptions, and categories
+- **Contact Seller** — Send messages to listing owners (authenticated)
 - **Categories** — Textbooks, Electronics, Furniture, Clothing, Sports, Other
 
 ---
@@ -104,122 +91,73 @@ The database is automatically seeded with test accounts on first start. See `dat
 ## Project Structure
 
 ```
-Team-Cipher/
-│
-├── start.sh                         # Start both servers with one command
+TeamCipher_Milestone3/
+├── start.sh                         # Start both servers
 ├── README.md                        # This file
 │
 ├── backend/
 │   ├── app.py                       # Flask API — all endpoints
-│   ├── requirements.txt             # Python dependencies
-│   ├── uploads/                     # Uploaded listing images
-│   └── README.md
+│   ├── requirements.txt             # Python dependencies (Flask, flask-cors, bcrypt)
+│   └── uploads/                     # Uploaded listing images (UUID filenames)
 │
 ├── database/
-│   ├── schema.sql                   # Table definitions (users, listings, messages, etc.)
-│   ├── db.py                        # Database functions (CRUD operations)
-│   ├── seed.py                      # Seed script — populates sample data
+│   ├── schema.sql                   # Table definitions
+│   ├── db.py                        # Database functions + verify_password()
+│   ├── seed.py                      # Seed script (bcrypt-hashed passwords)
 │   ├── __init__.py                  # Package exports
-│   └── team_cipher.db              # SQLite database file (auto-created)
+│   └── team_cipher.db              # SQLite database (auto-created on first start)
 │
 └── frontend/
     ├── public/
-    │   └── logo.svg                 # EagleMart eagle logo
+    │   └── logo.svg                 # EagleMart logo
     ├── app/
-    │   ├── globals.css              # Global styles (black/white/gold theme)
+    │   ├── globals.css              # Global styles
     │   ├── layout.jsx               # Root layout
-    │   ├── page.jsx                 # / — Landing page
-    │   ├── login/page.jsx           # /login
-    │   ├── register/page.jsx        # /register
-    │   ├── listings/page.jsx        # /listings — Browse all
-    │   ├── listings/[id]/page.jsx   # /listings/:id — Detail view
-    │   ├── create-listing/page.jsx  # /create-listing
-    │   ├── profile/[id]/page.jsx    # /profile/:id
-    │   ├── search/page.jsx          # /search
+    │   ├── page.jsx                 # Landing page
+    │   ├── login/page.jsx           # Login
+    │   ├── register/page.jsx        # Registration
+    │   ├── listings/page.jsx        # Browse listings
+    │   ├── listings/[id]/page.jsx   # Listing detail
+    │   ├── create-listing/page.jsx  # Create listing
+    │   ├── profile/[id]/page.jsx    # User profile
+    │   ├── search/page.jsx          # Search
     │   └── components/Navbar.jsx    # Navigation bar
     ├── package.json
-    ├── next.config.js
-    └── README.md
+    └── next.config.js
 ```
 
 ---
 
 ## API Endpoints
 
-| Method | Endpoint              | Description                                       |
-|--------|-----------------------|---------------------------------------------------|
-| POST   | `/api/login`          | Authenticate user, returns user object + token     |
-| POST   | `/api/register`       | Create new user account                            |
-| GET    | `/api/profile/:id`    | Get user profile and their listings                |
-| GET    | `/api/listings`       | Get all listings (supports `?category=` `?limit=`) |
-| GET    | `/api/listings/:id`   | Get a single listing by ID                         |
-| POST   | `/api/listings`       | Create a new listing (accepts FormData or JSON)    |
-| GET    | `/api/search?q=`      | Search listings by title/description               |
-| POST   | `/api/messages`       | Send a message to a listing's seller               |
-| GET    | `/api/test`           | Health check — returns user/listing counts         |
-
----
-
-## Frontend Pages
-
-| Route              | Page            | Description                          |
-|--------------------|-----------------|--------------------------------------|
-| `/`                | Landing         | Hero section, categories, recent listings |
-| `/login`           | Login           | Sign-in form                         |
-| `/register`        | Register        | Account creation form                |
-| `/listings`        | Browse          | All listings with category filters   |
-| `/listings/[id]`   | Listing Detail  | Full listing info, contact seller    |
-| `/create-listing`  | Create Listing  | Post a new item for sale             |
-| `/profile/[id]`    | Profile         | User info and their listings         |
-| `/search`          | Search          | Search with quick category filters   |
-
----
-
-## Database Schema
-
-```
-users           listings            messages
-─────           ────────            ────────
-id              id                  id
-username        user_id → users.id  sender_id → users.id
-email           title               receiver_id → users.id
-password        description         listing_id → listings.id
-role            price               message
-created_at      category            is_read
-updated_at      image_url           created_at
-                status
-                created_at
-```
+| Method | Endpoint              | Auth | Description                                  |
+|--------|-----------------------|------|----------------------------------------------|
+| POST   | `/api/login`          | No   | Authenticate user, returns token             |
+| POST   | `/api/register`       | No   | Create new user account                      |
+| GET    | `/api/profile/:id`    | Yes  | Get own profile and listings                 |
+| GET    | `/api/listings`       | No   | Browse listings (`?category=` `?limit=`)     |
+| GET    | `/api/listings/:id`   | No   | Get a single listing                         |
+| POST   | `/api/listings`       | Yes  | Create listing (validated image upload)      |
+| GET    | `/api/search?q=`      | No   | Search by title/description/category         |
+| POST   | `/api/messages`       | Yes  | Send message to seller                       |
+| GET    | `/api/test`           | No   | Health check                                 |
 
 ---
 
 ## Reset Database
 
-To wipe and re-seed the database with fresh sample data:
-
-```bash
-cd database
-python3 seed.py --reset
-```
-
-Or simply delete the database file and restart the backend:
+Delete the database file and restart the backend — it will auto-recreate and seed:
 
 ```bash
 rm database/team_cipher.db
 cd backend && source venv/bin/activate && python app.py
 ```
 
-The backend will detect the empty database and auto-seed it.
-
 ---
 
 ## Troubleshooting
 
-**"command not found: python3"**
-- Make sure Python 3.8+ is installed and in your PATH
-
-**"No module named flask"**
-- You forgot to activate the virtual environment: `source backend/venv/bin/activate`
+**"No module named flask"** — Activate the virtual environment: `source backend/venv/bin/activate`
 
 **Frontend won't start**
 ```bash
@@ -253,7 +191,9 @@ The following security controls are implemented:
 - **SQL Injection Prevention** — All database queries use parameterized placeholders (`?`)
 - **XSS Prevention** — React safe text rendering (no `dangerouslySetInnerHTML`)
 - **Password Hashing** — bcrypt with salting for all stored passwords
-- **Authorization Checks** — Profile and listing endpoints verify user identity
+- **Password Exclusion** — Password field stripped from all API responses
+- **Authentication** — Bearer token required for protected endpoints
+- **Authorization** — Users can only access their own profile data
 - **File Upload Validation** — Extension whitelist (images only), 5MB size limit, UUID filenames
 - **CORS Restriction** — Only frontend origins allowed (`localhost:3000`, `localhost:3001`)
 - **Generic Error Messages** — No internal details leaked to clients
@@ -264,5 +204,7 @@ The following security controls are implemented:
 ## Team
 
 **Team Cipher** — CSC 489 Web Application Security, Spring 2026
+
+Toby Holekamp, Chetanchal Saud, Benjamin Cooper, Christian Stuart, Binita Dhakal
 
 University of Southern Mississippi
